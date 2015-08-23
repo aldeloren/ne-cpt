@@ -138,6 +138,7 @@ module.exports = function( grunt ) {
 					'!phpunit.xml',
 					'!phpunit.xml.dist'
 				],
+        expand: true,
 				dest: 'release/<%= pkg.version %>/'
 			}
 		},

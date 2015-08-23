@@ -3,9 +3,11 @@ namespace TenUp\A1D_Northeastern_CPT\Core;
 
 /*
  * Generate plugin options
- * This is a simple checkbox to enable to creation of the custom post type
+ * This is a simple select list to enable to creation of the custom post type
  *
- * @uses 
+ * @uses register_setting
+ * @uses add_settings_section
+ * @uses add_settings_field 
  *
  * @return void
  */
@@ -34,6 +36,8 @@ function a1dnecpt_settings_init(){
 
 /*
  * Display inputs based on user preference 
+ *
+ * @uses get_option
  *
  * @returns string html
  */
@@ -112,6 +116,7 @@ function a1dnecpt_options_validation( $input ) {
 
 /*
  * Display Plugin info and helper text
+ * Registered custom post if user has enabled CPT functionality
  *
  * @uses get_option()
  *
