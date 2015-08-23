@@ -1,0 +1,124 @@
+<?php
+namespace TenUp\A1D_Northeastern_CPT\Core;
+
+/*
+ * Generate plugin options
+ * This is a simple checkbox to enable to creation of the custom post type
+ *
+ * @uses 
+ *
+ * @return void
+ */
+
+function a1dnecpt_settings_init(){
+
+  register_setting(
+    'a1dnecpt_cpt_options',
+    'a1dnecpt_cpt_options',
+    __NAMESPACE__ . '\a1dnecpt_options_validation'
+  );
+  add_settings_section(
+    'a1dnecpt_cpt_settings',
+    'NE CPT Settings',
+    __NAMESPACE__ . '\a1dnecpt_settings_info',
+    'a1d-necpt'
+  );
+  add_settings_field(
+    'a1dnecpt_enable_cpt',
+    'Enable NE Events CPT',
+    __NAMESPACE__ . '\a1dnecpt_settings_enable_cpt',
+    'a1d-necpt',
+    'a1dnecpt_cpt_settings'
+  );
+}
+
+/*
+ * Ensure user submitted a checked or disabled input
+ *
+ * @returns bool 
+ */
+
+function a1dnecpt_settings_enable_cpt() {
+
+  $options = get_option( 'a1dnecpt_cpt_options' );
+  $cpt_input = '';
+  if ( array_key_exists('a1dnecpt_cpt_enabled', $options) ){
+    $cpt_input = "<input type='checkbox' checked name='a1dnecpt_cpt_options[a1dnecpt_cpt_enabled]' value='enabled'>"; 
+  } else{
+    $cpt_input = "<input type='checkbox' name='a1dnecpt_cpt_options[a1dnecpt_cpt_enabled]' value='disabled'>"; 
+  }
+  echo $cpt_input;
+}
+
+/*
+ * Generate Admin dashboard
+ *
+ * @uses add_menu_page()
+ *
+ * @return void
+ */
+
+function register_a1dnecpt_admin() {
+
+    add_menu_page( 'A1D Custom Post Type- NE CPT', 'NE CPT Options', 'manage_options', 'a1d-necpt', '\TenUp\A1D_Northeastern_CPT\Core\a1dnecpt_dashboard', 'dashicons-desktop', 62 );
+}
+
+/*
+ * Build HTMl dashboard
+ *
+ * @return string html
+ */
+
+function a1dnecpt_dashboard() {
+
+  $admin_template = A1DNECPT_INC . 'templates/admin.php';
+  include_once( $admin_template );
+}
+
+/*
+ * Validate user input of cpt options 
+ *
+ * @uses get_option()
+ *
+ * @return array validated input
+ */
+
+function a1dnecpt_options_validation( $input ) {
+
+  $options = get_option( 'a1dnecpt_cpt_options' );
+  $new_input = array();
+
+  if ( $input['a1dnecpt_cpt_enabled'] ) {
+    if ( "enabled" ===  $input['a1dnecpt_cpt_enabled'] || "disabled" === $input['a1dnecpt_cpt_enabled'] ) {
+
+     $new_input['a1dnecpt_cpt_enabled'] = $input['a1dnecpt_cpt_enabled'];
+    } else {
+      $new_input['a1dnecpt_cpt_enabled'] = 'disabled';
+    }
+    return $new_input;
+  }
+}
+
+/*
+ * Display Plugin info and helper text
+ *
+ * @uses get_option()
+ *
+ * @return string html
+ */
+
+function a1dnecpt_settings_info() {
+
+  $options = get_option( 'a1dnecpt_cpt_options' );
+
+  $info = '';
+  $is_registered = false;
+  if ( array_key_exists( 'a1dnecpt_cpt_enabled', $options ) ) {
+    $is_registered = true;
+  };
+
+  if ( false === $is_registered ) {
+    $info .= "<p class='a1dnecpt_important'>This plugin utilizes the Uptime Robot service to monitor your WordPress site(s). Please register with the site <a href='https://uptimerobot.com/#newUser' target='_blank'>here</a> by clicking the 'Sign-up (free)' button. Once registered, please retreive your Main API key <a href='https://uptimerobot.com/dashboard#mySettings' target='_blank'>here</a>, and scrolling to the API Settings section.";
+  }
+}
+

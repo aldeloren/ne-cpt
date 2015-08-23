@@ -1,6 +1,18 @@
 <?php
 namespace TenUp\A1D_Northeastern_CPT\Core;
 
+/*
+ * Include admin functions
+ */
+
+include_once( __DIR__ . '/admin.php' );
+
+/*
+ * Include custom post type functions
+ */
+
+include_once( __DIR__. '/custom-post-type.php' );
+
 /**
  * Default setup routine
  *
@@ -16,6 +28,10 @@ function setup() {
 
 	add_action( 'init', $n( 'i18n' ) );
 	add_action( 'init', $n( 'init' ) );
+  add_action( 'init', $n( 'a1dnecpt_register_custom_post' ) );
+  add_action( 'init', $n( 'a1dnecpt_create_events_taxonomy' ) );
+  add_action( 'admin_menu', $n( 'register_a1dnecpt_admin' ) );
+  add_action( 'admin_menu', $n( 'a1dnecpt_settings_init' ) );
 
 	do_action( 'a1dnecpt_loaded' );
 }
